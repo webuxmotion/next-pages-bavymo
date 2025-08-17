@@ -1,17 +1,64 @@
 $primary-color: #1e40af;
 
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 40vh;
-  width: 100%;
-  border: 2px solid $primary-color;
+.isActive {
+  background-color: white;
+}
 
-  .title {
-    font-size: 3rem;
-    font-weight: bold;
-    color: $primary-color;
+.logo {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding-right: 30px;
+  padding-left: 30px;
+
+  &:hover {
+    background-color: white;
+  }
+}
+
+.logoWithNavItem {
+  display: flex;
+  height: 100%;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: white;
+  }
+}
+
+.container {
+  background-color: #F0F0F0;
+  height: 60px;
+  display: flex;
+
+  & > div {
+    display: flex;
+    align-items: center;
+
+    &:nth-child(1) {
+      flex-grow: 1;
+    }
+  }
+
+  nav {
+    height: 100%;
+    ul {
+      display: flex;
+      height: 100%;
+
+      li {
+        a {
+          font-weight: 500;
+          padding: 0 25px;
+          height: 100%;
+          display: flex;
+          align-items: center;
+
+          &:hover {
+            background-color: white;
+          }
+        }
+      }
+    }
   }
 }
