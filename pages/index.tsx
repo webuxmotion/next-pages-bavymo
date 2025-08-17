@@ -30,17 +30,23 @@ export default function Home({ personalCode }: HomeProps) {
   );
 }
 
-// ✅ Run on server before rendering
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const personalCode = context.req.cookies.personalCode;
+// ✅ Fully server-side
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  let personalCode = req.cookies.personalCode;
 
+  // If no cookie exists, generate a new code
   if (!personalCode) {
-    return {
-      redirect: {
-        destination: "/api/personal-code",
-        permanent: false,
-      },
-    };
+    const { generateCode } = await import("@/lib/personalCode");
+    personalCode = generateCode();
+
+    // Set the cookie on the server
+    res.setHeader(
+      "Set-Cookie",
+      `personalCode=${personalCode}; Path=/; Max-Age=3; HttpOnly; SameSite=Strict`
+    );
+    console.log("Generated new personalCode:", personalCode);
+  } else {
+    console.log("Using existing personalCode:", personalCode);
   }
 
   return {
