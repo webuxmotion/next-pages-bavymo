@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Chat from "@/components/Chat";
 import { GetServerSideProps } from "next";
+import Header from "@/components/Header/Header";
 
 type HomeProps = {
   personalCode?: string;
@@ -17,6 +18,7 @@ export default function Home({ personalCode }: HomeProps) {
 
   return (
     <div className="h-screen border-2 flex flex-col items-center justify-center gap-4">
+      <Header />
       <h1 className="text-2xl font-bold">NEXTJS BAVYMO</h1>
       <div>Your personal code: {personalCode}</div>
       <Chat />

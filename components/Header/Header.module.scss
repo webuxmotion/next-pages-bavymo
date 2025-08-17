@@ -1,0 +1,17 @@
+$primary-color: #1e40af;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 40vh;
+  width: 100%;
+  border: 2px solid $primary-color;
+
+  .title {
+    font-size: 3rem;
+    font-weight: bold;
+    color: $primary-color;
+  }
+}
