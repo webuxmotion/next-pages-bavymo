@@ -1,19 +1,24 @@
-// pages/api/socket.ts
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Server } from "socket.io";
+import { Server as IOServer } from "socket.io";
+import type { Server as HTTPServer } from "http";
+import type { Socket as NetSocket } from "net";
 
-// Extend Next.js API response to include socket with io
 interface NextApiResponseWithSocket extends NextApiResponse {
-    socket: any & { server: { io?: Server } };
+    socket: NetSocket & {
+        server: HTTPServer & { io?: IOServer };
+    };
 }
 
-export default function handler(req: NextApiRequest, res: NextApiResponseWithSocket) {
+export default function handler(
+    req: NextApiRequest,
+    res: NextApiResponseWithSocket
+) {
     if (!res.socket.server.io) {
         console.log("* First use, starting Socket.IO server");
 
-        const io = new Server(res.socket.server, {
-            path: "/api/socket", // important: same as route
-            cors: { origin: "*" }, // ⚠️ adjust for production
+        const io = new IOServer(res.socket.server as unknown as HTTPServer, {
+            path: "/api/socket", // must match client
+            cors: { origin: "*" }, // adjust for prod
         });
 
         io.on("connection", (socket) => {
@@ -21,7 +26,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponseWithSoc
 
             socket.on("message", (msg: string) => {
                 console.log("Received:", msg);
-                io.emit("message", msg); // broadcast to all clients
+                io.emit("message", msg);
             });
 
             socket.on("disconnect", () => {
@@ -34,5 +39,5 @@ export default function handler(req: NextApiRequest, res: NextApiResponseWithSoc
         console.log("Socket.IO server already running");
     }
 
-    res.end(); // ✅ must end response
+    res.end();
 }

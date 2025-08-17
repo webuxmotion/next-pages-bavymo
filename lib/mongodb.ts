@@ -15,13 +15,13 @@ if (!process.env.MONGODB_DB) {
 }
 
 if (process.env.NODE_ENV === "development") {
-    // @ts-expect-error
+    // @ts-expect-error: some description
     if (!global._mongoClientPromise) {
         client = new MongoClient(uri, options);
-        // @ts-expect-error
+        // @ts-expect-error: some description
         global._mongoClientPromise = client.connect();
     }
-    // @ts-expect-error
+    // @ts-expect-error: some description
     clientPromise = global._mongoClientPromise;
 } else {
     client = new MongoClient(uri, options);
