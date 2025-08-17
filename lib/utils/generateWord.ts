@@ -7,5 +7,5 @@ export function generateWord() {
     word = Array.isArray(result) ? result[0] : result; // ensure string
   } while (word.length < 3 || word.length > 7);
 
-  return word;
+  return word.toUpperCase();
 }

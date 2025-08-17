@@ -42,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     // Set the cookie on the server
     res.setHeader(
       "Set-Cookie",
-      `personalCode=${personalCode}; Path=/; Max-Age=3; HttpOnly; SameSite=Strict`
+      `personalCode=${personalCode}; Path=/; Max-Age=1; HttpOnly; SameSite=Strict`
     );
     console.log("Generated new personalCode:", personalCode);
   } else {
