@@ -1,0 +1,14 @@
+.main {
+    height: calc(100vh - 60px);
+    display: flex;
+}
+
+.content {
+    flex-grow: 1;
+}
+
+.sidebar {
+    min-width: 500px;
+    width: 30%;
+    background-color: #6F86B6;
+}

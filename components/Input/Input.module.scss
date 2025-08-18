@@ -1,0 +1,55 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 14px;
+  color: black;
+  display: block;
+  padding-left: 12px;
+}
+
+.inputContainer {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.icon {
+  display: flex;
+  margin-right: 8px;
+  color: #888;
+  position: absolute;
+  left: 15px;
+  pointer-events: none;
+}
+
+.input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 14px;
+  padding: 8px 12px;
+  padding-left: 40px;
+  min-height: 40px;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  background: #F5F5F5;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-size: 15px;
+
+  &:hover {
+    border-color: #6F86B6;
+  }
+
+  /* when input inside is focused */
+  &:focus-within {
+    border-color: #0070f3; // blue highlight
+    box-shadow: 0 0 0 2px rgba(0, 112, 243, 0.2);
+  }
+
+  &:focus {
+    outline: none; // ensure no default browser outline
+  }
+}

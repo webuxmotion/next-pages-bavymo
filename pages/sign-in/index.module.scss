@@ -1,0 +1,70 @@
+$buttonColor: #A2B9EB;
+$buttonColorHover: rgb(132, 153, 196);
+
+.container {
+    height: 100%;
+    display: flex;
+    padding-top: 120px;
+    justify-content: center;
+}
+
+.card {
+    width: 415px;
+
+    h1 {
+        font-size: 25px;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    p {
+        text-align: center;
+
+        a {
+            color: #6F86B6;
+            font-weight: bold;
+            text-decoration: underline;
+
+            &:hover {
+                color: #5c6f99;
+            }
+        }
+    }
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    background-color: $buttonColor;
+    border: 1px solid $buttonColor;
+    width: 100%;
+    padding: 13px 20px;
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
+    border-radius: 100px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $buttonColorHover;
+        border-color: $buttonColorHover;
+    }
+}
+
+.buttonGoogle {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    background-color: transparent;
+    width: 100%;
+    padding: 13px 20px;
+    font-size: 20px;
+    color: black;
+    border: 1px solid black;
+    border-radius: 100px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #F5F5F5;
+    }
+}
