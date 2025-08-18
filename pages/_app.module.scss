@@ -1,3 +1,5 @@
+@use './variables' as *;
+
 .main {
     height: calc(100vh - 60px);
     display: flex;
@@ -11,4 +13,15 @@
     min-width: 500px;
     width: 30%;
     background-color: #6F86B6;
+}
+
+@media (max-width: $mobile-breakpoint) {
+  .sidebar {
+    display: none;
+  }
+
+  .content {
+    flex-grow: 1;
+    width: 100%; /* optional, to take full space */
+  }
 }

@@ -1,0 +1,58 @@
+$size: 60px;
+$lineWidth: 30px;
+$lineHeight: 3px;
+$centerTop: calc($size / 2) - calc($lineHeight / 2);
+$centerLeft: calc(($size - $lineWidth) / 2);
+$verticalDistace: 9px;
+$activeTranslate: 6px;
+
+.burger {
+  width: $size;
+  height: $size;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  padding: 0;
+  border: none;
+  background: transparent;
+  position: relative;
+
+  .line {
+    display: block;
+    width: $lineWidth;
+    height: $lineHeight;
+    background-color: black;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+    position: absolute;
+
+    &:nth-child(1) {
+      left: $centerLeft;
+      top: $centerTop - $verticalDistace;
+    }
+
+    &:nth-child(2) {
+      left: $centerLeft;
+      top: $centerTop;
+    }
+
+    &:nth-child(3) {
+      left: $centerLeft;
+      top: $centerTop + $verticalDistace;
+    }
+  }
+
+  &.active {
+    .line:nth-child(1) {
+      transform: rotate(45deg) translate($activeTranslate, $activeTranslate);
+    }
+    .line:nth-child(2) {
+      opacity: 0;
+    }
+    .line:nth-child(3) {
+      transform: rotate(-45deg) translate($activeTranslate, -$activeTranslate);
+    }
+  }
+}

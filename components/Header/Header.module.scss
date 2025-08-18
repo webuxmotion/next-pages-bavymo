@@ -1,4 +1,4 @@
-$primary-color: #1e40af;
+@use "@/pages/variables" as *;
 
 .isActive {
   background-color: white;
@@ -20,25 +20,16 @@ $primary-color: #1e40af;
   display: flex;
   height: 100%;
   cursor: pointer;
-  
+
   &:hover {
     background-color: white;
   }
 }
 
 .container {
-  background-color: #F0F0F0;
+  background-color: #f0f0f0;
   height: 60px;
   display: flex;
-
-  & > div {
-    display: flex;
-    align-items: center;
-
-    &:nth-child(1) {
-      flex-grow: 1;
-    }
-  }
 
   nav {
     height: 100%;
@@ -60,5 +51,56 @@ $primary-color: #1e40af;
         }
       }
     }
+  }
+}
+
+.desktopNav {
+  display: block;
+  flex-grow: 1;
+}
+
+.mobileNav {
+  display: none;
+  flex-grow: 1;
+
+  nav {
+    display: none;
+    position: absolute;
+    top: 60px;
+    height: calc(100vh - 60px);
+    background-color: #f0f0f0;
+    overflow-y: scroll;
+
+    hr {
+      color: $primary-color;
+    }
+
+    ul {
+      display: flex;
+      flex-direction: column;
+      width: 300px;
+
+      li {
+        a {
+          padding: 20px 20px;
+        }
+      }
+    }
+  }
+
+  &.isMobileNavActive {
+    nav {
+      display: flex;
+    }
+  }
+}
+
+@media (max-width: $mobile-breakpoint) {
+  .desktopNav {
+    display: none;
+  }
+
+  .mobileNav {
+    display: flex;
   }
 }
