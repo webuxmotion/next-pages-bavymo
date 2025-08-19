@@ -38,7 +38,8 @@
       height: 100%;
 
       li {
-        a, button {
+        a,
+        button {
           font-weight: 500;
           padding: 0 25px;
           height: 100%;
@@ -104,5 +105,23 @@
 
   .mobileNav {
     display: flex;
+  }
+}
+
+@media (max-width: $mobile-breakpoint) {
+  .loginOrUserButtons nav ul li a {
+    padding: 0 10px;
+  }
+
+  .mobileLogoWrapper {
+    .logo {
+      padding-right: 15px;
+      padding-left: 15px;
+
+      svg {
+        width: 100px;
+        height: auto;
+      }
+    }
   }
 }

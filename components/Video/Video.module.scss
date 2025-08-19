@@ -1,3 +1,5 @@
+@use "../../pages/variables" as *;
+
 .wrapper {
     position: relative;
     background-color: #a2b9eb;
@@ -92,5 +94,27 @@
         padding: 3px 20px;
         border-top-right-radius: 10px;
         border-top-left-radius: 10px;
+    }
+}
+
+@media (max-width: $mobile-breakpoint) {
+    .personalCode {
+        right: 5px;
+        padding: 0;
+        top: 15px;
+    }
+
+    .localVideo {
+        width: 120px;
+        height: auto;
+        left: 0;
+        top: 0;
+
+        span {
+            font-size: 12px;
+            padding: 0px 10px;
+            border-top-right-radius: 5px;
+            border-top-left-radius: 5px;
+        }
     }
 }

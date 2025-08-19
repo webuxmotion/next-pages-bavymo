@@ -40,7 +40,7 @@ export default function Header() {
         <header className={styles.container}>
             {getDesktopNav()}
             {getMobileNav(mobileNavProps)}
-            <div>
+            <div className={styles.loginOrUserButtons}>
                 <nav>
                     <ul>
                         {getLoginOrUserButtons({ user, logout })}
