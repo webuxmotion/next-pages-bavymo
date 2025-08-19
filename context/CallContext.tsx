@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useSocket } from "./SocketContext";
 import { useAudio } from "./AudioContext";
+import { SOCKET_EVENTS } from "@/socket/events";
 
 interface IncomingCallData {
     fromCode: string;
@@ -42,24 +43,24 @@ export function CallProvider({ children }: { children: ReactNode }) {
     };
 
     useEffect(() => {
-        onEvent("incoming-call", (data: unknown) => {
+        onEvent(SOCKET_EVENTS.INCOMING_CALL, (data: unknown) => {
             const callData = data as IncomingCallData;
             setIncomingCall(callData);
 
             play();
         });
 
-        onEvent("call-accepted", () => {
+        onEvent(SOCKET_EVENTS.CALL_ACCEPTED, () => {
             setCallActive(true);
             setOutgoingCall(null);
         });
 
-        onEvent("call-rejected", () => {
+        onEvent(SOCKET_EVENTS.CALL_REJECTED, () => {
             alert("Call was rejected.");
             setOutgoingCall(null);
         });
 
-        onEvent("end-call", () => {
+        onEvent(SOCKET_EVENTS.END_CALL, () => {
             setCallActive(false);
             setIncomingCall(null);
             stop();
@@ -67,13 +68,13 @@ export function CallProvider({ children }: { children: ReactNode }) {
     }, [onEvent, play, stop]);
 
     const startCall = (targetCode: string, personalCode: string) => {
-        socket?.emit("call", { targetCode, personalCode });
+        socket?.emit(SOCKET_EVENTS.CALL, { targetCode, personalCode });
         setOutgoingCall(targetCode);
     };
 
     const acceptCall = () => {
         if (socket && incomingCall) {
-            socket.emit("call-accepted", { from: incomingCall.fromSocketId });
+            socket.emit(SOCKET_EVENTS.CALL_ACCEPTED, { from: incomingCall.fromSocketId });
             setIncomingCall(null);
             setCallActive(true);
             stopAudio();
@@ -82,15 +83,14 @@ export function CallProvider({ children }: { children: ReactNode }) {
 
     const rejectCall = () => {
         if (socket && incomingCall) {
-            socket.emit("call-rejected", { from: incomingCall.fromSocketId });
+            socket.emit(SOCKET_EVENTS.CALL_REJECTED, { from: incomingCall.fromSocketId });
             setIncomingCall(null);
             stopAudio();
         }
     };
 
     const endCall = () => {
-        socket?.emit("end-call", outgoingCall);
-        console.log('outgoingCall', outgoingCall);
+        socket?.emit(SOCKET_EVENTS.END_CALL, outgoingCall);
         setCallActive(false);
         setOutgoingCall(null);
         stopAudio();

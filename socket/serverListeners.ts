@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import { getDb } from "@/lib/mongodb";
+import { SOCKET_EVENTS } from "./events";
 
 export default async function serverListeners({ io }: { io: Server }) {
     const db = await getDb();
@@ -9,7 +10,7 @@ export default async function serverListeners({ io }: { io: Server }) {
     io.removeAllListeners("connection");
 
     io.on("connection", (socket) => {
-        socket.on("register", async (personalCode: string) => {
+        socket.on(SOCKET_EVENTS.REGISTER, async (personalCode: string) => {
             await connections.updateOne(
                 { personalCode },
                 { $set: { socketId: socket.id } },
@@ -17,7 +18,7 @@ export default async function serverListeners({ io }: { io: Server }) {
             );
         });
 
-        socket.on("call", async (data) => {
+        socket.on(SOCKET_EVENTS.CALL, async (data) => {
             const { targetCode, personalCode } = data;
 
             try {
@@ -25,8 +26,7 @@ export default async function serverListeners({ io }: { io: Server }) {
                 const target = await connections.findOne({ personalCode: targetCode });
 
                 if (target?.socketId) {
-                    // Emit "incoming-call" to the target socket
-                    socket.to(target.socketId).emit("incoming-call", {
+                    socket.to(target.socketId).emit(SOCKET_EVENTS.INCOMING_CALL, {
                         fromCode: personalCode,
                         fromSocketId: socket.id
                     });
@@ -39,25 +39,21 @@ export default async function serverListeners({ io }: { io: Server }) {
             }
         });
 
-        socket.on("call-accepted", (data) => {
-            socket.to(data.from).emit("call-accepted");
+        socket.on(SOCKET_EVENTS.CALL_ACCEPTED, (data) => {
+            socket.to(data.from).emit(SOCKET_EVENTS.CALL_ACCEPTED);
         });
 
-        socket.on("call-rejected", (data) => {
-            socket.to(data.from).emit("call-rejected");
+        socket.on(SOCKET_EVENTS.CALL_REJECTED, (data) => {
+            socket.to(data.from).emit(SOCKET_EVENTS.CALL_REJECTED);
         });
 
-        socket.on("disconnect", async () => {
-            await connections.deleteOne({ socketId: socket.id });
-        });
-
-        socket.on("end-call", async (outgoingPersonalCode) => {
+        socket.on(SOCKET_EVENTS.END_CALL, async (outgoingPersonalCode) => {
             try {
                 // Find the target user's socketId in MongoDB
                 const target = await connections.findOne({ personalCode: outgoingPersonalCode });
 
                 if (target?.socketId) {
-                    socket.to(target.socketId).emit("end-call");
+                    socket.to(target.socketId).emit(SOCKET_EVENTS.END_CALL);
                 } else {
                     console.log(`Target with code ${outgoingPersonalCode} not found`);
                 }
@@ -66,8 +62,8 @@ export default async function serverListeners({ io }: { io: Server }) {
             }
         });
 
-        socket.on("test", () => {
-            console.log('test');
+        socket.on("disconnect", async () => {
+            await connections.deleteOne({ socketId: socket.id });
         });
     });
 }

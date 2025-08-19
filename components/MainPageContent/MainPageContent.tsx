@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import CallForm from "../CallForm/CallForm";
 import IncomingCallModal from "../IncomingCallModal/IncomingCallModal";
 import OutgoingCallModal from "../OutgoingCallModal/OutgoingCallModal";
+import { SOCKET_EVENTS } from "@/socket/events";
 
 interface MainPageProps {
     personalCode: string;
@@ -14,8 +15,8 @@ export default function MainPageContent({ personalCode }: MainPageProps) {
 
     useEffect(() => {
         if (!socket) return;
-        // Emit register event to server
-        socket.emit("register", personalCode);
+
+        socket.emit(SOCKET_EVENTS.REGISTER, personalCode);
     }, [socket, personalCode]);
 
     if (!socket) return <p>Connecting to socket...</p>;

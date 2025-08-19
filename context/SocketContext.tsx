@@ -1,5 +1,6 @@
 "use client";
 
+import { SOCKET_EVENTS } from "@/socket/events";
 import { createContext, useContext, useEffect, useState, ReactNode, useRef, useCallback } from "react";
 import { io, Socket } from "socket.io-client";
 
@@ -28,8 +29,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       setSocket(s);
     });
 
-    const events = ["incoming-call", "call-accepted", "call-rejected", "end-call"];
-    events.forEach((event) => {
+    Object.values(SOCKET_EVENTS).forEach((event) => {
+
       s.on(event, (data) => {
         const handlers = listenersRef.current[event];
 
