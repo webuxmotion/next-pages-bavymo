@@ -2,8 +2,7 @@ $buttonColor: #19c290;
 $buttonColorHover: #18ad80;
 
 .wrapper {
-    display: flex;
-    flex-direction: column;
+    padding-top: 40px;
 }
 
 .button {
@@ -18,6 +17,7 @@ $buttonColorHover: #18ad80;
     font-weight: bold;
     border-radius: 100px;
     cursor: pointer;
+    margin-top: 20px;
 
     &:hover {
         background-color: $buttonColorHover;

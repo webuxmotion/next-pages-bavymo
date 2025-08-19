@@ -1,0 +1,75 @@
+.wrapper {
+    position: relative;
+    background-color: #a2b9eb;
+    border-radius: 13px;
+}
+
+.spacer {
+    padding-bottom: 55%;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.logoBig {
+    opacity: 0.3;
+    width: 22%;
+
+    svg {
+        width: 100%;
+        height: auto;
+    }
+}
+
+.personalCode {
+    color: white;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 39px;
+    gap: 12px;
+    padding-right: 10px;
+
+    span {
+        &:nth-child(1) {
+            font-size: 12px;
+        }
+        &:nth-child(2) {
+            font-size: 30px;
+            font-weight: bold;
+        }
+    }
+
+    button {
+        background-color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 40px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #e2ebff;
+        }
+    }
+}
+
+.localVideo {
+    width: 180px;
+    height: 180px;
+    background-color: #C9DAFD;
+    border-radius: 12px;
+    position: absolute;
+    top: 14px;
+    left: 14px;
+}

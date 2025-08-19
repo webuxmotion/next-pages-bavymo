@@ -5,6 +5,7 @@ import CallForm from "../CallForm/CallForm";
 import IncomingCallModal from "../IncomingCallModal/IncomingCallModal";
 import OutgoingCallModal from "../OutgoingCallModal/OutgoingCallModal";
 import { SOCKET_EVENTS } from "@/socket/events";
+import Video from "../Video/Video";
 
 interface MainPageProps {
     personalCode: string;
@@ -24,12 +25,14 @@ export default function MainPageContent({ personalCode }: MainPageProps) {
     return (
         <main className={styles.main}>
             <section className={styles.content}>
+
+                <Video personalCode={personalCode} />
+
                 <CallForm personalCode={personalCode} />
-                <p>personalCode: {personalCode}</p>
-                <p>socketId: {socket.id}</p>
             </section>
             <section className={styles.sidebar}>
-                sidebar
+                <p>personalCode: {personalCode}</p>
+                <p>socketId: {socket.id}</p>
             </section>
 
             <IncomingCallModal />

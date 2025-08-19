@@ -22,7 +22,7 @@ export default function CallForm({ personalCode }: CallFormProps) {
     }
 
     return (
-        <div>
+        <div className={styles.wrapper}>
             <Input
                 className=""
                 label="Friend's code"
