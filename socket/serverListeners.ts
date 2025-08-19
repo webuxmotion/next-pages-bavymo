@@ -23,7 +23,7 @@ export default async function serverListeners({ io }: { io: Server }) {
 
             try {
                 // Find the target user's socketId in MongoDB
-                const target = await connections.findOne({ personalCode: targetCode });
+                const target = await connections.findOne({ personalCode: targetCode.toUpperCase() });
 
                 if (target?.socketId) {
                     socket.to(target.socketId).emit(SOCKET_EVENTS.INCOMING_CALL, {
@@ -50,7 +50,7 @@ export default async function serverListeners({ io }: { io: Server }) {
         socket.on(SOCKET_EVENTS.END_CALL, async (outgoingPersonalCode) => {
             try {
                 // Find the target user's socketId in MongoDB
-                const target = await connections.findOne({ personalCode: outgoingPersonalCode });
+                const target = await connections.findOne({ personalCode: outgoingPersonalCode.toUpperCase() });
 
                 if (target?.socketId) {
                     socket.to(target.socketId).emit(SOCKET_EVENTS.END_CALL);
