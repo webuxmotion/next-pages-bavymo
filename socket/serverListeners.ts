@@ -1,0 +1,73 @@
+import { Server } from "socket.io";
+import { getDb } from "@/lib/mongodb";
+
+export default async function serverListeners({ io }: { io: Server }) {
+    const db = await getDb();
+    const connections = db.collection("connections");
+
+    // 🟢 Remove old listeners so changes apply after hot reload
+    io.removeAllListeners("connection");
+
+    io.on("connection", (socket) => {
+        socket.on("register", async (personalCode: string) => {
+            await connections.updateOne(
+                { personalCode },
+                { $set: { socketId: socket.id } },
+                { upsert: true }
+            );
+        });
+
+        socket.on("call", async (data) => {
+            const { targetCode, personalCode } = data;
+
+            try {
+                // Find the target user's socketId in MongoDB
+                const target = await connections.findOne({ personalCode: targetCode });
+
+                if (target?.socketId) {
+                    // Emit "incoming-call" to the target socket
+                    socket.to(target.socketId).emit("incoming-call", {
+                        fromCode: personalCode,
+                        fromSocketId: socket.id
+                    });
+
+                } else {
+                    console.log(`Target with code ${targetCode} not found`);
+                }
+            } catch (err) {
+                console.error("Error finding target connection:", err);
+            }
+        });
+
+        socket.on("call-accepted", (data) => {
+            socket.to(data.from).emit("call-accepted");
+        });
+
+        socket.on("call-rejected", (data) => {
+            socket.to(data.from).emit("call-rejected");
+        });
+
+        socket.on("disconnect", async () => {
+            await connections.deleteOne({ socketId: socket.id });
+        });
+
+        socket.on("end-call", async (outgoingPersonalCode) => {
+            try {
+                // Find the target user's socketId in MongoDB
+                const target = await connections.findOne({ personalCode: outgoingPersonalCode });
+
+                if (target?.socketId) {
+                    socket.to(target.socketId).emit("end-call");
+                } else {
+                    console.log(`Target with code ${outgoingPersonalCode} not found`);
+                }
+            } catch (err) {
+                console.error("Error finding target connection:", err);
+            }
+        });
+
+        socket.on("test", () => {
+            console.log('test');
+        });
+    });
+}

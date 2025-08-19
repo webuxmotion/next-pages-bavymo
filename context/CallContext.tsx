@@ -1,7 +1,8 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, ReactNode, useRef } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useSocket } from "./SocketContext";
+import { useAudio } from "./AudioContext";
 
 interface IncomingCallData {
     fromCode: string;
@@ -30,18 +31,14 @@ const CallContext = createContext<CallContextType>({
 
 export function CallProvider({ children }: { children: ReactNode }) {
     const { socket, onEvent } = useSocket();
+    const { play, stop } = useAudio();
 
     const [incomingCall, setIncomingCall] = useState<IncomingCallData | null>(null);
     const [outgoingCall, setOutgoingCall] = useState<string | null>(null);
     const [callActive, setCallActive] = useState(false);
-    const audioRef = useRef<HTMLAudioElement | null>(null);
 
-    // inside CallProvider
     const stopAudio = () => {
-        if (audioRef.current) {
-            audioRef.current.pause();
-            audioRef.current.currentTime = 0;
-        }
+        stop();
     };
 
     useEffect(() => {
@@ -49,13 +46,7 @@ export function CallProvider({ children }: { children: ReactNode }) {
             const callData = data as IncomingCallData;
             setIncomingCall(callData);
 
-            // create audio only once
-            if (!audioRef.current) {
-                audioRef.current = new Audio("/ringtones/beauty_n_beast_open.mp3");
-                audioRef.current.loop = true;
-            }
-
-            audioRef.current.play().catch(() => { });
+            play();
         });
 
         onEvent("call-accepted", () => {
@@ -70,8 +61,10 @@ export function CallProvider({ children }: { children: ReactNode }) {
 
         onEvent("end-call", () => {
             setCallActive(false);
+            setIncomingCall(null);
+            stop();
         });
-    }, [onEvent]);
+    }, [onEvent, play, stop]);
 
     const startCall = (targetCode: string, personalCode: string) => {
         socket?.emit("call", { targetCode, personalCode });
@@ -80,25 +73,24 @@ export function CallProvider({ children }: { children: ReactNode }) {
 
     const acceptCall = () => {
         if (socket && incomingCall) {
-            socket.emit("accept-call", { from: incomingCall.fromSocketId });
+            socket.emit("call-accepted", { from: incomingCall.fromSocketId });
             setIncomingCall(null);
             setCallActive(true);
-
             stopAudio();
         }
     };
 
     const rejectCall = () => {
         if (socket && incomingCall) {
-            socket.emit("reject-call", { from: incomingCall.fromSocketId });
+            socket.emit("call-rejected", { from: incomingCall.fromSocketId });
             setIncomingCall(null);
-
             stopAudio();
         }
     };
 
     const endCall = () => {
-        socket?.emit("end-call");
+        socket?.emit("end-call", outgoingCall);
+        console.log('outgoingCall', outgoingCall);
         setCallActive(false);
         setOutgoingCall(null);
         stopAudio();

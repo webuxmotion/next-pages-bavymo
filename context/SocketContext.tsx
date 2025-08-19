@@ -25,8 +25,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     socketRef.current = s;
 
     s.on("connect", () => {
-      console.log("Socket connected:", s.id);
-      setSocket(s); // mark socket as ready
+      setSocket(s);
     });
 
     const events = ["incoming-call", "call-accepted", "call-rejected", "end-call"];
