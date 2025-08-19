@@ -1,15 +1,47 @@
 import { useState } from 'react';
-import clsx from "clsx";
+import { useRouter } from "next/router";
 import Input from '@/components/Input/Input';
 import Email from '@/icons/Email';
 import Password from '@/icons/Password';
 import Link from '@/components/Link/Link';
 import Google from '@/icons/Google';
 import styles from './index.module.scss';
+import { useAuth } from '@/context/AuthContext';
 
 export default function Page() {
+    const router = useRouter();
+    const { login } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+
+    const handleLogin = async () => {
+        setError('');
+        setSuccess('');
+
+        try {
+            const res = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                setError(data.error || "Login failed");
+            } else {
+                setSuccess("Logged in successfully!");
+                login(data.token);
+                // redirect if needed
+                router.push("/");
+            }
+        } catch (err) {
+            setError("Something went wrong");
+        }
+    };
 
     return (
         <div className={styles.container}>
@@ -32,10 +64,14 @@ export default function Page() {
                     value={password}
                     onChange={setPassword}
                 />
+
+                {error && <p className="text-red-500">{error}</p>}
+                {success && <p className="text-green-500">{success}</p>}
+
                 <p className='!text-right mb-5 pr-3'>
                     <Link href='/forgot-password'>Forgot Password</Link>
                 </p>
-                <button className={styles.button}>Sign In</button>
+                <button className={styles.button} onClick={handleLogin}>Sign In</button>
                 <p className="mt-5 mb-5">
                     Don’t have an account? <Link href='/sign-up'>Sign Up</Link>
                 </p>

@@ -10,6 +10,40 @@ import styles from './index.module.scss';
 export default function Page() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [repeatPassword, setRepeatPassword] = useState('');
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+
+    const handleSubmit = async () => {
+        setError('');
+        setSuccess('');
+
+        if (password !== repeatPassword) {
+            setError("Passwords do not match");
+            return;
+        }
+
+        try {
+            const res = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                setError(data.error || "Failed to register");
+            } else {
+                setSuccess("Account created! You can now sign in.");
+                setEmail('');
+                setPassword('');
+                setRepeatPassword('');
+            }
+        } catch (err) {
+            setError("Something went wrong");
+        }
+    };
 
     return (
         <div className={styles.container}>
@@ -36,11 +70,16 @@ export default function Page() {
                     className="mb-10"
                     label="Repeat password"
                     placeholder="Repeat password"
+                    type="password"
                     icon={<Password />}
-                    value={password}
-                    onChange={setPassword}
+                    value={repeatPassword}
+                    onChange={setRepeatPassword}
                 />
-                <button className={styles.button}>Sign Up</button>
+
+                {error && <p className="text-red-500">{error}</p>}
+                {success && <p className="text-green-500">{success}</p>}
+
+                <button className={styles.button} onClick={handleSubmit}>Sign Up</button>
                 <p className="mt-5 mb-5">
                     Already have an account? <Link href='/sign-in'>Sign In</Link>
                 </p>
