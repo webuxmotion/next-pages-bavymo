@@ -1,0 +1,26 @@
+$buttonColor: #19c290;
+$buttonColorHover: #18ad80;
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.button {
+    display: flex;
+    justify-content: center;
+    background-color: $buttonColor;
+    border: 1px solid $buttonColor;
+    width: 100%;
+    padding: 13px 20px;
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
+    border-radius: 100px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $buttonColorHover;
+        border-color: $buttonColorHover;
+    }
+}

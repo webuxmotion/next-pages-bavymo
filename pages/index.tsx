@@ -1,6 +1,7 @@
 import { GetServerSideProps } from "next";
 import MainPageContent from "@/components/MainPageContent/MainPageContent";
 import { SocketProvider } from "@/context/SocketContext";
+import { CallProvider } from "@/context/CallContext";
 
 type HomeProps = {
   personalCode?: string;
@@ -9,7 +10,9 @@ type HomeProps = {
 export default function Home({ personalCode }: HomeProps) {
   return (
     <SocketProvider>
-      <MainPageContent personalCode={personalCode ?? ""} />
+      <CallProvider>
+        <MainPageContent personalCode={personalCode ?? ""} />
+      </CallProvider>
     </SocketProvider>
   );
 }
@@ -26,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
     // Set the cookie on the server
     res.setHeader(
       "Set-Cookie",
-      `personalCode=${personalCode}; Path=/; Max-Age=1; HttpOnly; SameSite=Strict`
+      `personalCode=${personalCode}; Path=/; Max-Age=600; HttpOnly; SameSite=Strict`
     );
     console.log("Generated new personalCode:", personalCode);
   } else {
