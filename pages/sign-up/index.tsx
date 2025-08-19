@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import clsx from "clsx";
 import Input from '@/components/Input/Input';
 import Email from '@/icons/Email';
 import Password from '@/icons/Password';
@@ -41,6 +40,7 @@ export default function Page() {
                 setRepeatPassword('');
             }
         } catch (err) {
+            console.error(err);
             setError("Something went wrong");
         }
     };

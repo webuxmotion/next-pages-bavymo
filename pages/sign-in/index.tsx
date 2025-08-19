@@ -39,6 +39,7 @@ export default function Page() {
                 router.push("/");
             }
         } catch (err) {
+            console.error(err);
             setError("Something went wrong");
         }
     };

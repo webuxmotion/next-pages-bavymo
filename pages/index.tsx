@@ -1,16 +1,16 @@
 import { GetServerSideProps } from "next";
-import Header from "@/components/Header/Header";
+import MainPageContent from "@/components/MainPageContent/MainPageContent";
+import { SocketProvider } from "@/context/SocketContext";
 
 type HomeProps = {
   personalCode?: string;
 };
 
 export default function Home({ personalCode }: HomeProps) {
-
   return (
-    <div>
-      Main page. Your personal code is {personalCode}
-    </div>
+    <SocketProvider>
+      <MainPageContent personalCode={personalCode ?? ""} />
+    </SocketProvider>
   );
 }
 
