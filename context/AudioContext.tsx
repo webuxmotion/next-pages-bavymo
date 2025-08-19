@@ -19,7 +19,7 @@ export function AudioProvider({ children }: { children: ReactNode }) {
     const unlockedRef = useRef(false);
 
     useEffect(() => {
-        audioRef.current = new Audio("/ringtones/beauty_n_beast_open.mp3");
+        audioRef.current = new Audio("/ringtones/samsung_bubble.mp3");
         audioRef.current.loop = true;
         audioRef.current.preload = "auto";
 
