@@ -67,9 +67,30 @@
 .localVideo {
     width: 180px;
     height: 180px;
-    background-color: #C9DAFD;
+    background-color: #c9dafd;
     border-radius: 12px;
     position: absolute;
     top: 14px;
     left: 14px;
+    overflow: hidden;
+
+    video {
+        height: 100%;
+        width: 100%;
+    }
+
+    span {
+        font-size: 18px;
+        z-index: 30;
+        color: black;
+        position: absolute;
+        left: 50%;
+        bottom: 0;
+        transform: translateX(-50%);
+        color: black;
+        background-color: #c9dafd;
+        padding: 3px 20px;
+        border-top-right-radius: 10px;
+        border-top-left-radius: 10px;
+    }
 }

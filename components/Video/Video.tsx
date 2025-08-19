@@ -1,7 +1,8 @@
 import LogoBig from '@/icons/LogoBig';
 import styles from './Video.module.scss';
 import Copy from '@/icons/Copy';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useCall } from '@/context/CallContext';
 
 interface VideoProps {
     personalCode: string;
@@ -9,6 +10,14 @@ interface VideoProps {
 
 export default function Video({ personalCode }: VideoProps) {
     const [copied, setCopied] = useState(false);
+    const { localStream } = useCall();
+    const videoRef = useRef<HTMLVideoElement | null>(null);
+
+    useEffect(() => {
+        if (videoRef.current && localStream) {
+            videoRef.current.srcObject = localStream;
+        }
+    }, [localStream]);
 
     const handleCopy = async () => {
         try {
@@ -37,7 +46,13 @@ export default function Video({ personalCode }: VideoProps) {
                     <LogoBig />
                 </div>
                 <div className={styles.localVideo}>
-                    
+                    <video
+                        ref={videoRef}
+                        autoPlay
+                        playsInline
+                        muted   // prevent echo
+                    />
+                    <span>You</span>
                 </div>
             </div>
         </div>

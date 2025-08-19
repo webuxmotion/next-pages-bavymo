@@ -18,11 +18,13 @@ interface CallContextType {
     acceptCall: () => void;
     rejectCall: () => void;
     endCall: () => void;
+    localStream: MediaStream | null;
 }
 
 const CallContext = createContext<CallContextType>({
     incomingCall: null,
     outgoingCall: null,
+    localStream: null,
     callActive: false,
     startCall: () => { },
     acceptCall: () => { },
@@ -33,14 +35,26 @@ const CallContext = createContext<CallContextType>({
 export function CallProvider({ children }: { children: ReactNode }) {
     const { socket, onEvent } = useSocket();
     const { play, stop } = useAudio();
-
     const [incomingCall, setIncomingCall] = useState<IncomingCallData | null>(null);
     const [outgoingCall, setOutgoingCall] = useState<string | null>(null);
     const [callActive, setCallActive] = useState(false);
+    const [localStream, setLocalStream] = useState<MediaStream | null>(null);
 
-    const stopAudio = () => {
-        stop();
-    };
+    useEffect(() => {
+        const initMedia = async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: true,
+                    audio: true,
+                });
+                setLocalStream(stream);
+            } catch (err) {
+                console.error("Failed to access media devices:", err);
+            }
+        };
+
+        initMedia();
+    }, []);
 
     useEffect(() => {
         onEvent(SOCKET_EVENTS.INCOMING_CALL, (data: unknown) => {
@@ -96,6 +110,10 @@ export function CallProvider({ children }: { children: ReactNode }) {
         stopAudio();
     };
 
+    const stopAudio = () => {
+        stop();
+    };
+
     return (
         <CallContext.Provider
             value={{
@@ -103,6 +121,7 @@ export function CallProvider({ children }: { children: ReactNode }) {
                 outgoingCall,
                 callActive,
                 startCall,
+                localStream,
                 acceptCall,
                 rejectCall,
                 endCall,
