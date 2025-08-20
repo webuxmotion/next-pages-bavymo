@@ -37,41 +37,20 @@ const CallContext = createContext<CallContextType>({
     endCall: () => { },
 });
 
-const iceServers = [
-    {
-        urls: 'stun:stun.l.google.com:19302'
-    },
-    {
-        urls: 'stun:stun1.l.google.com:19302'
-    },
-    {
-        urls: 'stun:stun2.l.google.com:19302'
-    },
-    {
-        urls: 'stun:stun3.l.google.com:19302'
-    },
-    {
-        urls: 'stun:stun4.l.google.com:19302'
-    },
-    {
-        urls: ['turn:openrelay.metered.ca:80'],
-        username: 'openrelayproject',
-        credential: 'openrelayproject'
-    },
-    {
-        urls: ["turn:numb.viagenie.ca"],
-        username: "webrtc@live.com",
-        credential: "muazkh"
-    },
-    {
-        urls: [
-            'turn:185.233.47.117:3478?transport=udp',
-            'turn:185.233.47.117:3478?transport=tcp'
-        ],
-        username: 'webrtcuser',
-        credential: 'strongpassword'
-    }
-];
+const configuration = {
+    iceServers: [
+        {
+            urls: [
+                'turn:185.233.47.117:3478?transport=udp',
+                'turn:185.233.47.117:3478?transport=tcp'
+            ],
+            username: 'webrtcuser',
+            credential: 'strongpassword'
+        }
+    ],
+    iceCandidatePoolSize: 10,
+    iceTransportPolicy: "all" // for testing
+};
 
 export function CallProvider({ children }: { children: ReactNode }) {
     const { socket, onEvent } = useSocket();
@@ -98,7 +77,7 @@ export function CallProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const createPeerConnection = (targetSocketId: string) => {
-        const pc = new RTCPeerConnection({ iceServers, iceTransportPolicy: "all" });
+        const pc = new RTCPeerConnection(configuration);
 
         // Add local tracks
         localStream?.getTracks().forEach(track => pc.addTrack(track, localStream));
