@@ -40,13 +40,28 @@ const CallContext = createContext<CallContextType>({
 const configuration: RTCConfiguration = {
     iceServers: [
         {
-            urls: [
-                'turn:185.233.47.117:3478?transport=udp',
-                'turn:185.233.47.117:3478?transport=tcp'
-            ],
-            username: 'webrtcuser',
-            credential: 'strongpassword'
-        }
+            urls: "stun:stun.relay.metered.ca:80",
+        },
+        {
+            urls: "turn:global.relay.metered.ca:80",
+            username: "83b132e8d1609acf8db6cf02",
+            credential: "gT5GFM2+lcKlcbyf",
+        },
+        {
+            urls: "turn:global.relay.metered.ca:80?transport=tcp",
+            username: "83b132e8d1609acf8db6cf02",
+            credential: "gT5GFM2+lcKlcbyf",
+        },
+        {
+            urls: "turn:global.relay.metered.ca:443",
+            username: "83b132e8d1609acf8db6cf02",
+            credential: "gT5GFM2+lcKlcbyf",
+        },
+        {
+            urls: "turns:global.relay.metered.ca:443?transport=tcp",
+            username: "83b132e8d1609acf8db6cf02",
+            credential: "gT5GFM2+lcKlcbyf",
+        },
     ],
     iceCandidatePoolSize: 10,
     iceTransportPolicy: "all" // for testing
