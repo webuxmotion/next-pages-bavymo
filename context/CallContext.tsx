@@ -37,7 +37,7 @@ const CallContext = createContext<CallContextType>({
     endCall: () => { },
 });
 
-const configuration = {
+const configuration: RTCConfiguration = {
     iceServers: [
         {
             urls: [
