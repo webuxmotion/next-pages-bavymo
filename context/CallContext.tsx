@@ -37,6 +37,33 @@ const CallContext = createContext<CallContextType>({
     endCall: () => { },
 });
 
+const iceServers = [
+    {
+        urls: 'stun:stun.l.google.com:19302'
+    },
+    {
+        urls: 'stun:stun1.l.google.com:19302'
+    },
+    {
+        urls: 'stun:stun2.l.google.com:19302'
+    },
+    {
+        urls: 'stun:stun3.l.google.com:19302'
+    },
+    {
+        urls: 'stun:stun4.l.google.com:19302'
+    },
+    {
+        urls: [
+            'stun:185.233.47.117:3478',
+            'turn:185.233.47.117:3478?transport=udp',
+            'turn:185.233.47.117:3478?transport=tcp'
+        ],
+        username: 'webrtcuser',
+        credential: 'strongpassword'
+    }
+];
+
 export function CallProvider({ children }: { children: ReactNode }) {
     const { socket, onEvent } = useSocket();
     const { play, stop } = useAudio();
@@ -63,7 +90,7 @@ export function CallProvider({ children }: { children: ReactNode }) {
 
     // Helper to create a new PeerConnection
     const createPeerConnection = (targetSocketId: string) => {
-        const pc = new RTCPeerConnection({ iceServers: [{ urls: "stun:stun.l.google.com:19302" }] });
+        const pc = new RTCPeerConnection({ iceServers });
 
         // Add local tracks
         localStream?.getTracks().forEach(track => pc.addTrack(track, localStream));
