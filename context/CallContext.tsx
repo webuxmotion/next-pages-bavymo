@@ -49,7 +49,7 @@ const configuration: RTCConfiguration = {
             credential: 'strongpassword'
         }
     ],
-    iceTransportPolicy: "all"
+    iceTransportPolicy: "relay"
 };
 
 export function CallProvider({ children }: { children: ReactNode }) {
