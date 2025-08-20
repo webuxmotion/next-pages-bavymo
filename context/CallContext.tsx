@@ -49,7 +49,7 @@ const configuration: RTCConfiguration = {
             credential: 'strongpassword'
         }
     ],
-    iceTransportPolicy: "relay"
+    iceTransportPolicy: "all"
 };
 
 export function CallProvider({ children }: { children: ReactNode }) {
@@ -171,6 +171,18 @@ export function CallProvider({ children }: { children: ReactNode }) {
         setOutgoingCall(targetCode);
 
         const pc = createPeerConnection(targetCode);
+
+        // Caller side
+        const dc = pc.createDataChannel("test");
+        dc.onopen = () => console.log("DataChannel open (caller)");
+        dc.onmessage = (e) => console.log("Got message:", e.data);
+
+        // Callee side
+        pc.ondatachannel = (event) => {
+            const dc = event.channel;
+            dc.onopen = () => console.log("DataChannel open (callee)");
+            dc.onmessage = (e) => console.log("Got message:", e.data);
+        };
 
         const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
