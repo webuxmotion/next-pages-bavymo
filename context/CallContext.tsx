@@ -54,8 +54,17 @@ const iceServers = [
         urls: 'stun:stun4.l.google.com:19302'
     },
     {
+        urls: ['turn:openrelay.metered.ca:80'],
+        username: 'openrelayproject',
+        credential: 'openrelayproject'
+    },
+    {
+        urls: ["turn:numb.viagenie.ca"],
+        username: "webrtc@live.com",
+        credential: "muazkh"
+    },
+    {
         urls: [
-            'stun:185.233.47.117:3478',
             'turn:185.233.47.117:3478?transport=udp',
             'turn:185.233.47.117:3478?transport=tcp'
         ],
@@ -88,9 +97,8 @@ export function CallProvider({ children }: { children: ReactNode }) {
         initMedia();
     }, []);
 
-    // Helper to create a new PeerConnection
     const createPeerConnection = (targetSocketId: string) => {
-        const pc = new RTCPeerConnection({ iceServers });
+        const pc = new RTCPeerConnection({ iceServers, iceTransportPolicy: "all" });
 
         // Add local tracks
         localStream?.getTracks().forEach(track => pc.addTrack(track, localStream));
@@ -107,6 +115,31 @@ export function CallProvider({ children }: { children: ReactNode }) {
                     to: targetSocketId,
                     candidate: event.candidate,
                 });
+            }
+        };
+
+        // ICE connection state change (useful for debugging)
+        pc.oniceconnectionstatechange = () => {
+            console.log("ICE connection state:", pc.iceConnectionState);
+            alert(pc.iceConnectionState);
+            if (pc.iceConnectionState === "disconnected") {
+                // You can try restarting ICE here
+                pc.restartIce();
+            }
+        };
+
+        // Signaling state change
+        pc.onsignalingstatechange = () => {
+            console.log("Signaling state:", pc.signalingState);
+        };
+
+        // Connection state change
+        pc.onconnectionstatechange = () => {
+            console.log("onconnectionstatechange", pc.connectionState);
+            if (pc.connectionState === "disconnected" || pc.connectionState === "failed") {
+                setRemoteStream(null);
+                setPeerConnection(null);
+                setCallActive(false);
             }
         };
 
@@ -149,6 +182,8 @@ export function CallProvider({ children }: { children: ReactNode }) {
         onEvent(SOCKET_EVENTS.ICE_CANDIDATE, async (data: unknown) => {
             const { candidate } = data as { candidate: RTCIceCandidateInit };
             if (peerConnection && candidate) {
+                console.log(peerConnection, candidate);
+
                 await peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
             }
         });
