@@ -10,14 +10,21 @@ interface VideoProps {
 
 export default function Video({ personalCode }: VideoProps) {
     const [copied, setCopied] = useState(false);
-    const { localStream } = useCall();
+    const { localStream, remoteStream } = useCall();
     const videoRef = useRef<HTMLVideoElement | null>(null);
+    const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
 
     useEffect(() => {
         if (videoRef.current && localStream) {
             videoRef.current.srcObject = localStream;
         }
     }, [localStream]);
+
+    useEffect(() => {
+        if (remoteVideoRef.current && remoteStream) {
+            remoteVideoRef.current.srcObject = remoteStream;
+        }
+    }, [remoteStream]);
 
     const handleCopy = async () => {
         try {
@@ -53,6 +60,13 @@ export default function Video({ personalCode }: VideoProps) {
                         muted   // prevent echo
                     />
                     <span>You</span>
+                </div>
+                <div className={styles.remoteVideo}>
+                    <video
+                        ref={remoteVideoRef}
+                        autoPlay
+                        playsInline
+                    />
                 </div>
             </div>
         </div>

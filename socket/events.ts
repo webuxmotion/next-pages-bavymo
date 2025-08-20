@@ -5,6 +5,7 @@ export const SOCKET_EVENTS = {
     END_CALL: "end-call",
     CALL: "call",
     REGISTER: "register",
+    ICE_CANDIDATE: "ice_candidate"
 } as const;
 
 // Optional: Type for event names
