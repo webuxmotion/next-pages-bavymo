@@ -100,7 +100,6 @@ export function CallProvider({ children }: { children: ReactNode }) {
         // ICE connection state change (useful for debugging)
         pc.oniceconnectionstatechange = () => {
             console.log("ICE connection state:", pc.iceConnectionState);
-            alert(pc.iceConnectionState);
             if (pc.iceConnectionState === "disconnected") {
                 // You can try restarting ICE here
                 pc.restartIce();
@@ -145,7 +144,6 @@ export function CallProvider({ children }: { children: ReactNode }) {
         });
 
         onEvent(SOCKET_EVENTS.CALL_REJECTED, () => {
-            alert("Call was rejected.");
             setOutgoingCall(null);
         });
 
